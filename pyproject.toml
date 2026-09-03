@@ -3,6 +3,10 @@ name = "sid-gavit-portfolio"
 version = "2.1.0"
 description = "Portfolio site with live AI agent"
 requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.109.0",
+  "httpx>=0.26.0",
+]
 
 [tool.vercel]
 entrypoint = "api.chat:app"
