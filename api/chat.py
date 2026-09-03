@@ -3,6 +3,8 @@
 Deployed on Vercel as a Python serverless function.
 
 Routes:
+    GET  /                 → serves index.html (portfolio homepage)
+    GET  /<any static>     → serves any static file at project root (resume PDF, etc.)
     POST /api/chat         → { "reply": string } (non-streaming, kept for fallback)
     POST /api/chat/stream  → SSE stream of text chunks (primary path, feels instant)
     GET  /api/warmup       → wakes the cold function + primes Groq connection pool
@@ -10,8 +12,8 @@ Routes:
     GET  /api/docs         → auto-generated OpenAPI docs
 
 This file is intentionally thin: it only handles HTTP concerns
-(request/response, rate limiting, error mapping). All agent logic lives
-in the `siddhikesh_agent` package at the project root.
+(request/response, rate limiting, error mapping, static serving).
+All agent logic lives in the `siddhikesh_agent` package at the project root.
 """
 
 import json
@@ -24,7 +26,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from siddhikesh_agent import Agent, LLMError, RateLimiter
@@ -189,3 +192,34 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         status_code=exc.status_code,
         content={"error": exc.detail},
     )
+
+
+# ─── Static file serving (project root as web root) ─────
+# The frontend `index.html` and downloadable assets (resume PDF) live at the
+# project root. Since Vercel now routes ALL requests to this FastAPI function
+# (not just /api/*), we serve those files from here too. Mounted AFTER all
+# API routes so /api/* handlers take precedence.
+
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+
+@app.get("/")
+async def root():
+    """Serve the portfolio homepage."""
+    index_path = _PROJECT_ROOT / "index.html"
+    if index_path.exists():
+        return FileResponse(index_path, media_type="text/html")
+    raise HTTPException(status_code=404, detail="index.html not found")
+
+
+# Mount everything else at the project root — resume PDF, any future assets.
+# `html=True` makes it fall back to index.html for unknown paths (SPA-style).
+try:
+    app.mount(
+        "/",
+        StaticFiles(directory=str(_PROJECT_ROOT), html=True),
+        name="static",
+    )
+except RuntimeError:
+    # Directory doesn't exist during some test scenarios — skip mount
+    pass
