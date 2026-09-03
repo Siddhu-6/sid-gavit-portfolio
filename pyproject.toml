@@ -1,0 +1,8 @@
+[project]
+name = "sid-gavit-portfolio"
+version = "2.1.0"
+description = "Portfolio site with live AI agent"
+requires-python = ">=3.12"
+
+[tool.vercel]
+entrypoint = "api.chat:app"
