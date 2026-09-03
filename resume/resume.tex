@@ -1,0 +1,128 @@
+%============================================================
+%  Siddhikesh Arvind Gavit — Resume
+%  Target roles: AI Engineer / GenAI / AI Automation / ML Engineer
+%  Format:       ATS-optimized, single column, one page A4
+%  Compile:      pdflatex resume.tex   (twice for hyperlinks)
+%============================================================
+
+\documentclass[10pt,a4paper]{article}
+
+% ─── Layout & packages (only ATS-safe, universally supported) ──
+\usepackage[left=0.5in,right=0.5in,top=0.3in,bottom=0.3in]{geometry}
+\usepackage[hidelinks,colorlinks=true,urlcolor=blue!55!black,linkcolor=black]{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{parskip}
+
+\pagestyle{empty}
+\setlength{\parskip}{1pt}
+
+% ─── Section headings — clean, standard, parseable ─────────
+\titleformat{\section}
+  {\vspace{1pt}\normalsize\bfseries\MakeUppercase}
+  {}{0em}{}[\vspace{-3pt}\hrulefill]
+\titlespacing*{\section}{0pt}{4pt}{2pt}
+
+\setlist[itemize]{leftmargin=1.1em,itemsep=0pt,topsep=0pt,parsep=0pt}
+
+\newcommand{\entry}[2]{%
+  \noindent\textbf{#1}\hfill\textit{\small #2}\par\vspace{-2pt}
+}
+
+\begin{document}
+
+%============================================================
+% HEADER
+%============================================================
+\begin{center}
+  {\Large \textbf{Siddhikesh Arvind Gavit}} \\[2pt]
+  {\small AI Engineer $\cdot$ Generative AI $\cdot$ Agentic Systems $\cdot$ ML Engineer} \\[2pt]
+  \footnotesize
+  \href{mailto:sid.gavit6@gmail.com}{sid.gavit6@gmail.com} $\cdot$
+  +91 93592 79778 $\cdot$
+  \href{https://github.com/Siddhu-6}{github.com/Siddhu-6} $\cdot$
+  \href{https://linkedin.com/in/sid-gavit6}{linkedin.com/in/sid-gavit6}
+\end{center}
+
+%============================================================
+% SUMMARY
+%============================================================
+\section*{Summary}
+\small
+AI/ML Engineer shipping production \textbf{Generative AI} systems --- from multi-agent orchestrators and \textbf{RAG} pipelines to LLM-powered workflow automation and edge-deployed neural networks. Built agentic research assistants scoring \textbf{0.90 groundedness} on RAGAS, automation platforms cutting manual triage by \textbf{$\sim$70\%}, and on-chip sleep-prediction ensembles at \textbf{AUROC 0.87}. Fluent across the LangChain ecosystem, vector databases, workflow tools (n8n, Zapier, Make.com), and end-to-end MLOps. Seeking full-time AI Engineer, GenAI, or ML roles.
+
+%============================================================
+% EDUCATION
+%============================================================
+\section*{Education}
+\small
+\entry{IIIT Vadodara --- B.Tech, Computer Science \& Engineering \textnormal{(CPI: 6.33)}}{Aug 2023 -- May 2027}
+
+\vspace{2pt}
+\entry{Hon. Sharad Pawar International School, Nashik --- CBSE \textnormal{(XII: 80.00\%, X: 84.80\%)}}{2011 -- 2022}
+
+%============================================================
+% TECHNICAL SKILLS
+%============================================================
+\section*{Technical Skills}
+\small
+\begin{itemize}
+  \item \textbf{Generative \& Agentic AI:} LangChain, LangGraph, LangSmith, LlamaIndex, DSPy, Model Context Protocol (MCP), Multi-Agent Systems, Retrieval-Augmented Generation (RAG), Prompt Engineering, Chain-of-Thought, Fine-tuning, Tool-Calling, Few-Shot Prompting, LLM Evaluation (RAGAS, custom evals), Guardrails
+  \item \textbf{LLM APIs \& Models:} OpenAI (GPT-4, GPT-OSS), Anthropic Claude, Google Gemini, Groq, Hugging Face, Ollama, Meta Llama
+  \item \textbf{Workflow Automation:} n8n, Zapier, Make.com, Webhooks, Event-driven Pipelines, API Integrations
+  \item \textbf{ML \& Deep Learning:} scikit-learn, XGBoost, TensorFlow, LSTM, GRU, TCN, Transformer, SHAP, LIME, SMOTE, GridSearchCV, Feature Engineering, EDA, Model Evaluation
+  \item \textbf{Backend \& MLOps:} Python, FastAPI, Flask, REST APIs, Docker, Vercel, Streamlit, Git/GitHub, CI/CD, OpenAPI
+  \item \textbf{Data \& Databases:} ChromaDB, Pinecone (vector DBs), Embeddings, Semantic Search, PostgreSQL, MySQL, MongoDB, Supabase, SQL, pandas, NumPy, Matplotlib, Seaborn
+  \item \textbf{Languages \& Core CS:} Python, Java, C++, SQL, JavaScript, HTML/CSS; Data Structures \& Algorithms, OOP, DBMS, Operating Systems, Computer Networks
+\end{itemize}
+
+%============================================================
+% EXPERIENCE
+%============================================================
+\section*{Experience}
+\small
+
+\entry{Research Intern --- Edge AI \& On-Chip Sleep-Quality Prediction}{IIIT Vadodara $\cdot$ Jun 2026 -- Aug 2026}
+\begin{itemize}
+  \item Built and benchmarked \textbf{7+ ML/DL models} (LSTM, GRU, TCN, Transformer, XGBoost) with a soft-voting ensemble to predict next-day WASO from 7-day wearable HRV and questionnaire biomarkers, reaching \textbf{AUROC $\sim$0.87}.
+  \item Ensured leakage-free evaluation via subject-wise splits; applied \textbf{SHAP} and \textbf{LIME} explainability with Youden's-J threshold tuning (Python, TensorFlow, scikit-learn).
+  \item Researching on-chip \textbf{edge-hardware} implementation for real-time, low-power on-device inference from wearable biosignals.
+\end{itemize}
+
+%============================================================
+% PROJECTS
+%============================================================
+\section*{Projects}
+\small
+
+\entry{Multi-Agent AI Research Assistant}{Python $\cdot$ LangGraph $\cdot$ LangChain $\cdot$ ChromaDB $\cdot$ RAGAS $\cdot$ Streamlit}
+\begin{itemize}
+  \item Architected an autonomous \textbf{multi-agent system} (Planner, Researcher, Writer, Critic) in LangGraph with tool-calling, shared vector memory, and iteration limits --- decomposes queries, retrieves evidence, synthesizes cited structured reports.
+  \item Achieved \textbf{0.90 groundedness} on a 20-query RAGAS eval ($\sim$2$\times$ single-prompt baseline); Critic loops with Writer until every claim is source-backed; per-agent tracing via LangSmith.
+\end{itemize}
+
+\entry{AI Workflow Automation Platform}{Python $\cdot$ n8n $\cdot$ LangChain $\cdot$ LLM APIs $\cdot$ Docker $\cdot$ Webhooks}
+\begin{itemize}
+  \item Designed and deployed end-to-end triage: emails and forms classified for intent and urgency by a \textbf{LangChain classifier}, then routed by n8n to Gmail, Sheets, or Slack with structured responses --- cutting manual triage effort by \textbf{$\sim$70\%}.
+  \item Hardened with retry-safe webhooks, idempotency, and failure alerts; few-shot prompt layer extracts clean JSON from unstructured text with run monitoring for success-rate tracking.
+\end{itemize}
+
+\entry{Production ML Prediction Microservice}{Python $\cdot$ scikit-learn $\cdot$ XGBoost $\cdot$ SMOTE $\cdot$ FastAPI $\cdot$ Docker}
+\begin{itemize}
+  \item Delivered a customer-churn model as a REST microservice covering the full pipeline (EDA $\to$ features $\to$ training $\to$ deployment) on a \textbf{7,000+ record dataset}; improved F1 from \textbf{0.72 to 0.85} via SMOTE class balancing and XGBoost \textbf{GridSearchCV} tuning.
+  \item Deployed a containerized FastAPI service with input validation, structured logging, and \textbf{sub-100 ms} inference latency; OpenAPI-documented for downstream integration.
+\end{itemize}
+
+%============================================================
+% ACHIEVEMENTS
+%============================================================
+\section*{Achievements \& Leadership}
+\small
+\begin{itemize}
+  \item \textbf{Anveshan Hackathon, IIT Guwahati} --- national-level 48-hour hackathon; built an ML-based Fake Job Scam Detection system. Also participated in \textbf{HackIIITV (2 editions)} and the \textbf{Adobe Hackathon}, delivering working prototypes in 24--36 hours.
+  \item \textbf{Football:} 3rd place Inter-IIIT Sports Meet (national) representing IIIT Vadodara; 2nd at Concours DA-IICT; 2$\times$ runner-up at Ventura (2024, 2025); \textbf{3$\times$ state-level player} for Nashik Division, Maharashtra; qualified for SGFI National trials.
+  \item \textbf{Teaching Assistant \& Football Mentor} (paid), IIIT Vadodara (Aug 2025 -- Present); \textbf{Event Photographer}, Obscura Photography Club (2023 -- Present) --- covered Kreiva, Ventura, HackIIITV.
+\end{itemize}
+
+\end{document}
