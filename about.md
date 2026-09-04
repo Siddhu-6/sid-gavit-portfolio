@@ -10,7 +10,7 @@
 - Nickname: Sid (goes by this everywhere)
 - Born: 6 July 2004
 - Age: 22
-- Hometown: Navapur, Maharashtra (grew up here, schooling in Nashik)
+- Hometown: Navapur, Maharashtra (grew up here, schooling in Nashik, spent most of my time in Nashik school)
 - Roots: Navapur, Nandurbar district — the family village. Still close to it.
 - Currently based: Gandhinagar, Gujarat (for college at IIIT Vadodara)
 - Sun sign: Cancer (not that he tracks it, but yeah)
@@ -340,8 +340,8 @@ Official photographer for institute flagship events: Kreiva (cultural fest), Ven
 
 ## Weaknesses (honest — for the interview question)
 
-- **CPI isn't stellar** (6.33). He chose projects and hackathons over grades. He'd make the same call again, but he's aware it's a filter for some companies.
-- **Not the deepest theoretical ML background.** Comfortable with practical ML and DL theories, but wouldn't claim to be able to derive the math for a novel paper.
+- **CPI isn't stellar** (6.33). He chose projects and learning prod AI systems and workflows over grades. He'd make the same call again, but he's aware it's a filter for some companies.
+- **Not the deepest ML background.** Comfortable with practical ML-DL theories, creating and training models and using them in project, but wouldn't claim to be able to derive the math for a novel paper.
 - **Introvert energy** in first meetings — takes a few conversations to warm up. Once he does, he's very engaged.
 - **Perfectionism on things he cares about.** Sometimes ships slower than he could because he wants the details right. Working on being more willing to ship rough drafts.
 - **Not a networker by nature.** Doesn't hustle on LinkedIn or work the crowd at conferences. This is by choice, but it means he misses some opportunities.
