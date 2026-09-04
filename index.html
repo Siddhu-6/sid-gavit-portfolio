@@ -2184,7 +2184,7 @@ Best regards,
     } catch (e) {
       if (history[history.length - 1]?.type === 'thinking') history.pop();
       if (e.name === 'AbortError') history.push({ type:'err', text: 'timed out. try again?' });
-      else history.push({ type:'err', text: 'no backend detected. deploy to vercel (or run "vercel dev") to enable the live agent.' });
+      else history.push({ type:'err', text: "Agent’s upset, you’re not connected to the internet.😣" });
       renderTerm();
     } finally {
       clearTimeout(timeout);
