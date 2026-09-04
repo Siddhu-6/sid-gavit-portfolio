@@ -104,7 +104,7 @@ class GroqClient:
         if status_code == 413:
             raise LLMError("request payload too large 😵‍💫, try something short.🤏🏻")
         if status_code == 429:
-            raise LLMError(" everyone has limits, so does this model. [rate-limit reached 🥲] ; try again in few seconds.🙃")
+            raise LLMError(" everyone has limits, so does this model.🥲 try again in few seconds.🙃")
         if status_code >= 400:
             raise LLMError(f"model returned HTTP {status_code}. [someone doesn't want to talk to you 😔]")
 
