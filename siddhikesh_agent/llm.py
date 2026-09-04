@@ -102,11 +102,11 @@ class GroqClient:
         if status_code == 401:
             raise LLMError("GROQ_API_KEY is invalid or missing.")
         if status_code == 413:
-            raise LLMError("request payload too large.")
+            raise LLMError("request payload too large 😵‍💫, try something short.🤏🏻")
         if status_code == 429:
-            raise LLMError("model rate-limited; try again in a moment.")
+            raise LLMError(" everyone has limits, so does this model. [rate-limit reached 🥲] ; try again in few seconds.🙃")
         if status_code >= 400:
-            raise LLMError(f"model returned HTTP {status_code}.")
+            raise LLMError(f"model returned HTTP {status_code}. [someone doesn't want to talk to you 😔]")
 
     async def generate(self, system_prompt: str, user_message: str) -> str:
         """Non-streaming: return the full reply text once complete."""
@@ -117,9 +117,9 @@ class GroqClient:
         try:
             response = await client.post(url, json=payload, headers=self._headers())
         except httpx.TimeoutException as e:
-            raise LLMError("request timed out.") from e
+            raise LLMError("request timed out. [model IGNORED you 😁]") from e
         except httpx.RequestError as e:
-            raise LLMError(f"network error: {e}") from e
+            raise LLMError(f"network error: {e} [someone doesn't want to talk to you 😔]") from e
 
         self._raise_for_status(response.status_code)
 
