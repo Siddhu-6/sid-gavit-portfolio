@@ -21,7 +21,7 @@ MAX_REQUESTS_PER_MINUTE: int = int(os.environ.get("MAX_REQUESTS_PER_MINUTE", "15
 RATE_LIMIT_WINDOW_SECONDS: int = 60
 
 # ── LLM generation tuning ────────────────────────────────
-LLM_TEMPERATURE: float = float(os.environ.get("LLM_TEMPERATURE", "0.9"))
+LLM_TEMPERATURE: float = float(os.environ.get("LLM_TEMPERATURE", "0.87"))
 LLM_MAX_TOKENS: int = int(os.environ.get("LLM_MAX_TOKENS", "400"))
 LLM_TIMEOUT_SECONDS: float = float(os.environ.get("LLM_TIMEOUT_SECONDS", "15"))
 
