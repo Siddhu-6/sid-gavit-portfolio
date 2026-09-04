@@ -2118,9 +2118,9 @@ Best regards,
       if (history[history.length - 1]?.type === 'thinking') history.pop();
 
       if (!res.ok || !res.body) {
-        let msg = 'agent unavailable. try again in a moment.';
+        let msg = 'everyone has limits, so does this model.🥲 try again in few seconds.🙃';
         try { const err = await res.json(); if (err.error) msg = err.error; } catch(e){}
-        if (res.status === 404) msg = 'agent runs on a python backend. deploy this to vercel (or run "vercel dev") to enable the live agent.';
+        if (res.status === 404) msg = "agent doesn't wanna talk to you at the moment.😤 try again later.🙃";
         history.push({ type:'err', text: msg });
         renderTerm();
         return;
