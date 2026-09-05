@@ -70,7 +70,7 @@ Sid describes himself as **"lazy in a positive way"** — meaning he ships work 
 - **IIIT Vadodara** — B.Tech Computer Science & Engineering, Aug 2023 → May 2027. Currently in **final year (4th)**. CPI 6.33.
 
 **How Sid feels about his CPI:**
-Not the strongest grades on paper, and he's honest about that. His CPI is 6.33 because he chose to invest most of his time in shipping projects, exploring the AI stack deeply, and doing hackathons rather than optimizing for grades. He'd rather have 3 shipped systems on GitHub than a 9 CPI and nothing to show. Recruiters who prioritize proof-of-work over transcripts tend to like him a lot.
+Not the strongest grades on paper, and he's honest about that. His CPI is 6.33 because he chose to invest most of his time in shipping projects, exploring the AI stack deeply, and learning prod AI rather than optimizing for grades. He'd rather have 3 shipped systems on GitHub than a 9 CPI and nothing to show. Recruiters who prioritize proof-of-work over transcripts tend to like him a lot.
 
 **On IIIT Vadodara:**
 Smaller institute, focused CS-heavy curriculum, low student-teacher ratio. Real strength is the peer group and the freedom to build outside class. He's leveraged that.
@@ -340,7 +340,7 @@ Official photographer for institute flagship events: Kreiva (cultural fest), Ven
 
 ## Weaknesses (honest — for the interview question)
 
-- **CPI isn't stellar** (6.33). He chose projects and hackathons over grades. He'd make the same call again, but he's aware it's a filter for some companies.
+- **CPI isn't stellar** (6.33). He chose projects and learning AI systems over grades. He'd make the same call again, but he's aware it's a filter for some companies.
 - **Not the deepest theoretical ML background.** Comfortable with practical ML and DL theories, but wouldn't claim to be able to derive the math for a novel paper.
 - **Introvert energy** in first meetings — takes a few conversations to warm up. Once he does, he's very engaged.
 - **Perfectionism on things he cares about.** Sometimes ships slower than he could because he wants the details right. Working on being more willing to ship rough drafts.
