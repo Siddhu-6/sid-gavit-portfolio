@@ -3,18 +3,20 @@
 Design:
 - Parse about.md once per cold start into {section_title: section_content}
 - On each request, build a compact KB by combining:
-    (a) always-included CORE sections (identity, voice, rules, contact)
+    (a) always-included CORE sections (identity, voice, rules, contact, quick-answers)
     (b) top-N sections matching keywords in the user's message
+    (c) FALLBACK: if no topic sections matched, include Interests + Fun bits
+        so casual questions never come back empty
 
-This keeps request payloads to Groq under ~4K tokens while preserving
-the full richness of a ~34K-character about.md — solving the HTTP 413
-we hit when the full KB was pushed on every request.
+This keeps request payloads to Groq under ~4-5K tokens while preserving
+the full richness of a ~34K-character about.md.
 """
 
 import re
 from typing import Dict, List, Optional, Tuple
 
 from siddhikesh_agent.config import KNOWLEDGE_BASE_PATH
+
 
 # ─── Sections that ship with EVERY request (identity + rules + voice) ──
 # Uses exact match for these — keeps the core lean.
@@ -25,91 +27,181 @@ CORE_SECTIONS_EXACT = {
     "Contact",
 }
 
-# Prefix-matched core sections (their real titles have parenthetical suffixes)
+# Prefix-matched core sections (real titles have parenthetical suffixes)
 CORE_SECTION_PREFIXES = (
-    "Signature phrases",       # voice contract
-    "OUT-OF-CONTEXT HANDLING", # behavior rules
+    "Signature phrases",        # voice contract
+    "OUT-OF-CONTEXT HANDLING",  # behavior rules
+    "Quick-answer lookup",      # authoritative fallback answers for common Qs
+)
+
+# ─── Fallback sections (loaded ONLY when no topic keywords matched) ───
+# Ensures casual/personal questions phrased in unexpected ways still get
+# rich context. E.g. "fav player and tactics" doesn't contain "football",
+# but the Interests section has the football → Messi info.
+FALLBACK_SECTION_PREFIXES = (
+    "Interests",   # long-form section with football, coffee, music, etc.
+    "Fun bits",    # grab bag of casual details
 )
 
 # ─── Topic sections + keywords that trigger them ───────────────────────
 # Keys are matched as PREFIXES of actual section titles (which may have
 # parenthetical suffixes in the source markdown).
+#
+# Keywords are exhaustive — every natural phrasing a user might use to
+# ask about a topic. Better to over-match than under-match; irrelevant
+# sections lose to more-relevant ones on score.
 TOPIC_KEYWORDS: Dict[str, List[str]] = {
-    "Personality — how to convey": ["tone", "voice", "how you talk",
-                                      "how you speak", "how you sound"],
-    "Personality quick-fire": ["prefer", " vs ", "versus", " or ",
-                                "morning person", "night owl", "cats or dogs",
-                                "introvert", "extrovert", "either or",
-                                "which do you"],
-    "Quick-answer lookup": ["why ai", "why ml", "why you", "hiring",
-                              "salary", "available", "cpi", "dream company"],
-    "Family": ["family", "parents", "mom", "mother", "dad", "father",
-               "sister", "brother", "siblings", "home"],
-    "Education": ["education", "school", "college", "cpi", "gpa", "grades",
-                  "iiit", "vadodara", "12th", "class", "10th", "cbse",
-                  "study", "studied", "student", "degree", "btech", "b.tech",
-                  "drop year", "jee"],
-    "Interests": ["hobby", "hobbies", "fun", "interest",
-                   "spare time", "free time", "outside",
-                   "coffee", "football", "reading", "music",
-                   "travel", "cook", "gym", "language",
-                   "night walk", "nature", "walk"],
-    "Media & Culture": ["movie", "movies", "show", "shows", "series", "tv",
-                        "netflix", "watch", "bollywood", "korean",
-                        "running man", "walking dead", "zombie", "genre"],
-    "Recent books read": ["book", "books", "read", "reading", "author",
-                          "novel", "vex king", "manifest"],
-    "Personal life": ["relationship", "love", "girlfriend",
-                       "boyfriend", "dating", "marriage",
-                       "personal life", " ex ", "single",
-                       "believe in love"],
-    "AI / tech origin story": ["why ai", "why ml", "why not", "how you got",
-                                "started", "how did you get into",
-                                "get into ai", "get into ml", "learn ai",
-                                "learn ml"],
-    "Origin story": ["origin", "how you got", "journey",
-                      "how did you", "path", "story", "pivot"],
-    "Projects": ["project", "projects", "built", "build",
-                  "portfolio", "github", "shipped", "code",
-                  "research assistant", "workflow", "churn",
-                  "multi-agent", "langgraph", "agent"],
-    "Experience": ["experience", "internship", "intern", "job", "research",
-                    "work history", "teaching assistant", "ta ", "photographer",
-                    "obscura", "worked", "current role"],
-    "Achievements": ["achievement", "achievements", "hackathon", "hackathons",
-                      "award", "won", "prize", "anveshan", "hackiiitv",
-                      "adobe", "national", "state", "medal"],
-    "Career direction & compensation": ["career", "salary", "compensation",
-                                          "ctc", "lpa", "package", "hire",
-                                          "hiring", "role", "position",
-                                          "when can you start", "available",
-                                          "availability", "off-campus",
-                                          "off campus", "dream company",
-                                          "target company", "startup",
-                                          "company", "join"],
-    "Work style & values": ["work style", "values", "how do you work",
-                              "how you work", "ship", "shipping",
-                              "production", "approach"],
-    "Strengths": ["strength", "strengths", "strong", "good at",
-                   "best at", "why you", "why should"],
-    "Weaknesses": ["weakness", "weaknesses", "weak", "bad at",
-                    "improve", "growth area"],
-    "Hot takes / opinions": ["opinion", "opinions", "think about", "views",
-                              "hot take", "controversial", "hype",
-                              "overhyped", "underhyped", "believe"],
-    "Daily routines": ["routine", "routines", "morning", "day", "daily",
-                        "schedule", "typical day", "wake up", "sleep"],
-    "What makes him happy": ["happy", "happiness", "joy", "enjoy",
-                               "makes you happy"],
-    "What makes him uncomfortable": ["uncomfortable", "hate", "dislike",
-                                       "annoy", "annoyed", "annoys",
-                                       "pet peeve"],
-    "Life goal": ["goal in life", "goal", "goals", "future", "dream",
-                   "aspiration", "long term", "5 years",
-                   "five years", "vision", "purpose"],
-    "Fun bits": ["fun bit", "fun bits", "random", "casual",
-                  "guilty", "weird", "quirk", "quirks", "trivia",
-                  "tell me something"],
+    "Personality — how to convey": [
+        "tone", "voice", "how you talk", "how you speak", "how you sound",
+        "personality trait", "vibe", "character", "attitude",
+    ],
+    "Personality quick-fire": [
+        "prefer", " vs ", "versus", " or ", "morning person", "night owl",
+        "cats or dogs", "introvert", "extrovert", "either or",
+        "which do you", "would you rather",
+    ],
+    "Quick-answer lookup": [
+        # Broad — this section is designed as a fallback for common Qs
+        "why ai", "why ml", "why you", "hiring", "salary", "available",
+        "cpi", "dream company", "different", "unique", "stand out",
+        "makes you", "why should we hire",
+    ],
+    "Family": [
+        "family", "parents", "mom", "mother", "dad", "father",
+        "sister", "brother", "siblings", "home", "background",
+        "grew up", "childhood",
+    ],
+    "Education": [
+        "education", "school", "college", "cpi", "gpa", "grades",
+        "iiit", "vadodara", "12th", "class", "10th", "cbse",
+        "study", "studied", "student", "degree", "btech", "b.tech",
+        "drop year", "jee", "academic", "university", "institute",
+    ],
+    "Interests": [
+        # Hobby-general
+        "hobby", "hobbies", "fun", "interest", "spare time", "free time",
+        "outside", "downtime", "unwind", "relax", "leisure", "pastime",
+        # Football-specific
+        "football", "soccer", "player", "players", "team", "match", "matches",
+        "position", "positions", "tactic", "tactics", "style of play",
+        "playing", "play", "coaching", "coach", "drill", "drills",
+        "technique", "techniques", "approach", "winning", "win", "goal",
+        "striker", "forward", "midfielder", "defender", "training",
+        "sport", "sports", "fitness", "messi", "ronaldo",
+        # Coffee-specific
+        "coffee", "brew", "brewing", "espresso", "pour", "pour-over",
+        "filter", "black", "cafe", "café", "beans", "roast",
+        # Music-specific
+        "music", "song", "songs", "band", "artist", "genre", "playlist",
+        "listen", "lo-fi", "bollywood",
+        # Reading
+        "read", "reading", "book", "books", "novel", "author",
+        # Travel
+        "travel", "trip", "vacation", "destination", "country", "countries",
+        "japan", "korea", "switzerland",
+        # Cooking
+        "cook", "cooking", "food", "eat", "cuisine", "dish", "meal", "recipe",
+        # Gym
+        "gym", "workout", "lift", "exercise", "cardio", "strength",
+        # Languages
+        "language", "languages", "spanish", "korean", "urdu", "learning language",
+        # Nature
+        "night walk", "nature", "walk", "walks", "stargazing", "stars",
+        "river", "rivers", "mountain", "mountains", "beach", "solitude",
+        "outdoors", "hiking",
+    ],
+    "Media & Culture": [
+        "movie", "movies", "film", "films", "show", "shows", "series",
+        "tv", "netflix", "watch", "watching", "bollywood", "korean",
+        "running man", "walking dead", "zombie", "genre", "documentary",
+        "ghibli", "anime",
+    ],
+    "Recent books read": [
+        "book", "books", "read", "reading", "author", "novel",
+        "vex king", "manifest", "alchemist", "reading list",
+    ],
+    "Personal life": [
+        "relationship", "love", "girlfriend", "boyfriend", "dating",
+        "marriage", "personal life", " ex ", "single", "believe in love",
+        "romantic", "partner", "crush",
+    ],
+    "AI / tech origin story": [
+        "why ai", "why ml", "why not", "how you got", "started",
+        "how did you get into", "get into ai", "get into ml",
+        "learn ai", "learn ml", "beginning", "how it started",
+    ],
+    "Origin story": [
+        "origin", "how you got", "journey", "how did you", "path",
+        "story", "pivot", "your story", "background story",
+    ],
+    "Projects": [
+        "project", "projects", "built", "build", "building",
+        "portfolio", "github", "shipped", "code", "coding",
+        "research assistant", "workflow", "churn", "multi-agent",
+        "langgraph", "agent", "what have you built", "what did you build",
+        "your work", "sample work", "showcase", "demo",
+    ],
+    "Experience": [
+        "experience", "internship", "intern", "job", "research",
+        "work history", "teaching assistant", "ta ", "photographer",
+        "obscura", "worked", "current role", "past role", "resume",
+        "cv", "background", "professional",
+    ],
+    "Achievements": [
+        "achievement", "achievements", "hackathon", "hackathons",
+        "award", "won", "prize", "anveshan", "hackiiitv",
+        "adobe", "national", "state", "medal", "recognition",
+        "accolade",
+    ],
+    "Career direction & compensation": [
+        "career", "salary", "compensation", "ctc", "lpa", "package",
+        "hire", "hiring", "role", "position", "when can you start",
+        "available", "availability", "off-campus", "off campus",
+        "dream company", "target company", "startup", "company",
+        "join", "notice period", "onboarding", "location",
+    ],
+    "Work style & values": [
+        "work style", "values", "how do you work", "how you work",
+        "ship", "shipping", "production", "approach to work",
+        "philosophy", "principle", "principles",
+    ],
+    "Strengths": [
+        "strength", "strengths", "strong", "good at", "best at",
+        "why you", "why should", "superpower", "advantage",
+    ],
+    "Weaknesses": [
+        "weakness", "weaknesses", "weak", "bad at", "improve",
+        "growth area", "areas of growth", "development area",
+        "shortcoming", "limitation",
+    ],
+    "Hot takes / opinions": [
+        "opinion", "opinions", "think about", "views", "hot take",
+        "controversial", "hype", "overhyped", "underhyped", "believe",
+        "thoughts on", "what do you think", "unpopular",
+    ],
+    "Daily routines": [
+        "routine", "routines", "morning", "day", "daily",
+        "schedule", "typical day", "wake up", "sleep",
+        "when do you", "how do you spend",
+    ],
+    "What makes him happy": [
+        "happy", "happiness", "joy", "enjoy", "makes you happy",
+        "brings you joy", "love doing",
+    ],
+    "What makes him uncomfortable": [
+        "uncomfortable", "hate", "dislike", "annoy", "annoyed",
+        "annoys", "pet peeve", "irritate", "can't stand",
+    ],
+    "Life goal": [
+        "goal in life", "goal", "goals", "future", "dream",
+        "aspiration", "long term", "5 years", "five years",
+        "vision", "purpose", "life plan", "ambition",
+    ],
+    "Fun bits": [
+        "fun bit", "fun bits", "random", "casual", "guilty",
+        "weird", "quirk", "quirks", "trivia", "tell me something",
+        "surprise me", "fun fact", "did you know",
+    ],
 }
 
 # ─── Module-level cache ───────────────────────────────────────────────
@@ -120,10 +212,8 @@ _RAW_CACHE: Optional[str] = None
 def _parse_sections(markdown: str) -> Dict[str, str]:
     """Split about.md into {section_title: full_section_text_including_header}.
 
-    Uses `#`, `##`, `###` markdown headers as section delimiters. Section
-    boundaries end at the next same-or-higher-level header. The dict is
-    keyed by the header text (without the leading # marks or trailing
-    whitespace).
+    Uses `#` and `##` markdown headers as section delimiters. Deeper `###`
+    stays within its parent section.
     """
     sections: Dict[str, str] = {}
     lines = markdown.split("\n")
@@ -131,20 +221,15 @@ def _parse_sections(markdown: str) -> Dict[str, str]:
     current_body: List[str] = []
 
     for line in lines:
-        # Match top-level (#) or second-level (##) headers only —
-        # deeper ### / #### stay part of their parent section.
         header_match = re.match(r"^(#{1,2})\s+(.+?)\s*$", line)
         if header_match:
-            # Flush the previous section
             if current_title is not None:
                 sections[current_title] = "\n".join(current_body).strip()
-            # Start new section
             current_title = header_match.group(2).strip()
             current_body = [line]
         else:
             current_body.append(line)
 
-    # Flush final section
     if current_title is not None:
         sections[current_title] = "\n".join(current_body).strip()
 
@@ -166,11 +251,7 @@ def _load_from_disk() -> None:
 
 
 def load_knowledge() -> str:
-    """Return the full knowledge base (for anything that wants everything).
-
-    Kept for backward compatibility. New code should prefer
-    `build_kb_for_message()` which selects a compact subset.
-    """
+    """Return the full knowledge base (for anything that wants everything)."""
     if _RAW_CACHE is None:
         _load_from_disk()
     return _RAW_CACHE or ""
@@ -185,10 +266,15 @@ def reload_knowledge() -> str:
 
 
 def _is_core_section(title: str) -> bool:
-    """Check if a section title is a core section (exact match or matches core prefix)."""
+    """Check if a section title is a core section (exact or prefix match)."""
     if title in CORE_SECTIONS_EXACT:
         return True
     return any(title.startswith(prefix) for prefix in CORE_SECTION_PREFIXES)
+
+
+def _is_fallback_section(title: str) -> bool:
+    """Check if a section title is one of the fallback sections."""
+    return any(title.startswith(prefix) for prefix in FALLBACK_SECTION_PREFIXES)
 
 
 def _score_section(section_title: str, query_lower: str) -> int:
@@ -206,18 +292,19 @@ def _score_section(section_title: str, query_lower: str) -> int:
 def build_kb_for_message(user_message: str, max_extra_sections: int = 3) -> str:
     """Assemble a compact KB tailored to the current user message.
 
-    Always includes:
-      - CORE_SECTIONS_EXACT + CORE_SECTION_PREFIXES-matched sections
-        (identity, personality, voice, out-of-context rules, contact)
-    Adds:
-      - up to `max_extra_sections` topic sections whose keywords match the
-        user's message, ranked by keyword-hit count
+    Loading strategy:
+      1. ALWAYS include core sections (identity, voice, rules, contact,
+         quick-answers)
+      2. Score all other sections by keyword overlap with the message
+      3. If any topic sections scored > 0: include top-N (default 3)
+      4. If NO topic sections scored: fall back to Interests + Fun bits
+         so casual questions always have rich hobby/personality material
+         to draw from
 
-    Rationale: keeps total prompt payload well under Groq's per-request limit
-    (~3K tokens vs. 8K+ if we included the full about.md),
-    while ensuring the agent has the specific context needed for the current
-    question. Also cushions against future KB growth — you can keep adding
-    to about.md without ever risking a 413 again.
+    Rationale for the fallback: keyword matching is brittle — users don't
+    always use the words we anticipated. E.g. "fav player and tactics"
+    doesn't contain "football" but the Interests section is exactly what
+    the LLM needs to answer accurately.
     """
     if _SECTIONS_CACHE is None:
         _load_from_disk()
@@ -234,9 +321,16 @@ def build_kb_for_message(user_message: str, max_extra_sections: int = 3) -> str:
         if score > 0:
             scored.append((score, title))
 
-    # Highest score first, ties broken alphabetically (deterministic)
-    scored.sort(key=lambda x: (-x[0], x[1]))
-    picked_extras = {title for _, title in scored[:max_extra_sections]}
+    # Pick top-N by score (ties broken alphabetically for determinism)
+    if scored:
+        scored.sort(key=lambda x: (-x[0], x[1]))
+        picked_extras = {title for _, title in scored[:max_extra_sections]}
+    else:
+        # FALLBACK: no keyword matched — load safe defaults for casual Qs
+        picked_extras = {
+            title for title in _SECTIONS_CACHE
+            if _is_fallback_section(title)
+        }
 
     # Preserve about.md's original section order for natural narrative flow
     parts: List[str] = []
