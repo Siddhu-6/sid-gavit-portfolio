@@ -87,7 +87,7 @@ TOPIC_KEYWORDS: Dict[str, List[str]] = {
         "playing", "play", "coaching", "coach", "drill", "drills",
         "technique", "techniques", "approach", "winning", "win", "goal",
         "striker", "forward", "midfielder", "defender", "training",
-        "sport", "sports", "fitness", "messi", "ronaldo",
+        "sport", "sports", "fitness", "messi",
         # Coffee-specific
         "coffee", "brew", "brewing", "espresso", "pour", "pour-over",
         "filter", "black", "cafe", "café", "beans", "roast",
