@@ -4,8 +4,6 @@
 
 🔗 **live at → [siddhikesh-portfolio.vercel.app](https://siddhikesh-portfolio.vercel.app)**
 
-*(replace with your actual URL after deploy)*
-
 ---
 
 ## what's in it
