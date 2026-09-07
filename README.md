@@ -55,7 +55,7 @@ the internet has enough templated portfolios. add one with your own weird ideas 
 
 sid.gavit6@gmail.com · +91 93592 79778 · [github](https://github.com/Siddhu-6) · [linkedin](https://linkedin.com/in/sid-gavit6)
 
-or just [ask my agent](https://siddhikesh-portfolio.vercel.app#agent).
+or just [ask my agent](https://sid-gavit-portfolio.vercel.app#agent).
 
 ---
 
