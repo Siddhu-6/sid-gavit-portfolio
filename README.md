@@ -2,7 +2,7 @@
 
 > a portfolio that talks back. built by a final-year CSE student who ships agentic systems, plays state-level football, and takes his coffee black.
 
-🔗 **live at → [siddhikesh-portfolio.vercel.app](https://siddhikesh-portfolio.vercel.app)**
+🔗 **live at → [siddhikesh-portfolio.vercel.app](https://sid-gavit-portfolio.vercel.app)**
 
 ---
 
