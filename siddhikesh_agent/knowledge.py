@@ -137,14 +137,17 @@ TOPIC_KEYWORDS: Dict[str, List[str]] = {
     "Projects": [
         "project", "projects", "built", "build", "building",
         "portfolio", "github", "shipped", "code", "coding",
-        "research assistant", "workflow", "churn", "multi-agent",
-        "langgraph", "agent", "what have you built", "what did you build",
+        "synapse", "notes-gpt", "notes gpt", "siddhu-gpt", "rag", "pdf",
+        "mcp", "crewai", "multi-agent", "langgraph", "agent", "sid.agent",
+        "what have you built", "what did you build",
         "your work", "sample work", "showcase", "demo",
     ],
     "Experience": [
         "experience", "internship", "intern", "job", "research",
         "work history", "teaching assistant", "ta ", "photographer",
         "obscura", "worked", "current role", "past role", "resume",
+        "waso", "sleep prediction", "tinyml", "edge ai", "arduino",
+        "quantization", "microcontroller", "on-chip",
         "cv", "background", "professional",
     ],
     "Achievements": [
