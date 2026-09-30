@@ -555,13 +555,13 @@ img,svg{display:block;max-width:100%}
 /* ─── STACK PITCH — 11 v 11 tech-stack football match ─── */
 .stack-wrap{margin-bottom:5rem}
 .stack-pitch{
-  position:relative;aspect-ratio:21/9;min-height:340px;
+  position:relative;width:100%;aspect-ratio:21/9;min-height:340px;
   border:1px solid var(--rule-strong);overflow:hidden;
   background:
     radial-gradient(ellipse at center,rgba(255,107,61,.03),transparent 70%),
     linear-gradient(180deg,var(--ink-2),var(--ink));
 }
-@media (max-width:640px){.stack-pitch{aspect-ratio:16/11;min-height:280px}}
+@media (max-width:640px){.stack-pitch{aspect-ratio:16/11;min-height:280px}.stack-pitch .pitch-score{top:34px}}
 .stack-pitch svg{width:100%;height:100%;overflow:visible}
 .pitch-line{stroke:var(--rule-strong);stroke-width:1.2;fill:none;transition:stroke .3s}
 .pitch-goal{stroke:var(--rule-strong);stroke-width:1.5;fill:none;transition:stroke .3s,filter .3s}
@@ -887,9 +887,9 @@ footer .built .py{color:var(--data)}
     <div class="agent-viz reveal" data-d="2" aria-hidden="true">
       <div class="viz-label">
         <span style="width:6px;height:6px;background:var(--data);border-radius:50%;box-shadow:0 0 0 3px rgba(183,217,160,.15)"></span>
-        multi-agent · live
+        synapse · agent loop
       </div>
-      <svg viewBox="0 0 400 400" role="img" aria-label="Live multi-agent diagram">
+      <svg viewBox="0 0 400 400" role="img" aria-label="Synapse agent loop: plan, execute, verify, remember">
         <defs>
           <radialGradient id="g1" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stop-color="#FF6B3D" stop-opacity=".55"/>
@@ -904,37 +904,40 @@ footer .built .py{color:var(--data)}
         <path id="e2" class="edge" d="M320,200 Q262,262 200,320"/>
         <path id="e3" class="edge" d="M200,320 Q138,262 80,200"/>
         <path id="e4" class="edge" d="M80,200 Q138,138 200,80"/>
-        <path id="e5" class="edge" d="M200,80 L200,320" opacity=".5"/>
-        <path id="e6" class="edge" d="M80,200 L320,200" opacity=".5"/>
+        <path id="e5" class="edge" d="M200,320 L200,80" opacity=".5" stroke-dasharray="3 4"/>
+        <path id="e6" class="edge" d="M320,200 L80,200" opacity=".5"/>
         <circle cx="200" cy="200" r="56" fill="url(#g1)"/>
         <circle cx="200" cy="200" r="26" class="node-outer"/>
         <circle cx="200" cy="200" r="18" class="node-inner"/>
         <circle cx="200" cy="200" r="5" class="node-core pulse-signal"/>
-        <text x="200" y="248" text-anchor="middle" class="node-role">shared memory</text>
+        <text x="200" y="244" text-anchor="middle" class="node-role">langgraph state</text>
+        <text x="200" y="256" text-anchor="middle" class="node-role">checkpointed</text>
+        <text x="208" y="146" class="node-role" opacity=".8">replan</text>
 
         <g transform="translate(200 80)">
           <circle r="26" class="node-outer"/><circle r="19" class="node-inner"/>
           <circle r="5" class="node-core pulse-signal"/>
-          <text y="-36" text-anchor="middle" class="node-label">Planner</text>
-          <text y="-22" text-anchor="middle" class="node-role">decomposes</text>
+          <text y="-36" text-anchor="middle" class="node-label">Plan</text>
+          <text y="-22" text-anchor="middle" class="node-role">validated steps</text>
         </g>
         <g transform="translate(320 200)">
           <circle r="26" class="node-outer"/><circle r="19" class="node-inner"/>
           <circle r="5" class="node-core pulse-data"/>
-          <text x="38" y="-2" class="node-label">Researcher</text>
-          <text x="38" y="12" class="node-role">retrieves</text>
+          <text x="38" y="-2" class="node-label">Execute</text>
+          <text x="38" y="12" class="node-role">mcp tools</text>
+          <text y="46" text-anchor="middle" class="node-role">risky? asks you</text>
         </g>
         <g transform="translate(200 320)">
           <circle r="26" class="node-outer"/><circle r="19" class="node-inner"/>
           <circle r="5" class="node-core pulse-lilac"/>
-          <text y="46" text-anchor="middle" class="node-label">Writer</text>
-          <text y="60" text-anchor="middle" class="node-role">synthesizes</text>
+          <text y="46" text-anchor="middle" class="node-label">Verify</text>
+          <text y="60" text-anchor="middle" class="node-role">reads writes back</text>
         </g>
         <g transform="translate(80 200)">
           <circle r="26" class="node-outer"/><circle r="19" class="node-inner"/>
           <circle r="5" class="node-core pulse-signal"/>
-          <text x="-38" y="-2" text-anchor="end" class="node-label">Critic</text>
-          <text x="-38" y="12" text-anchor="end" class="node-role">grounds</text>
+          <text x="-38" y="-2" text-anchor="end" class="node-label">Memory</text>
+          <text x="-38" y="12" text-anchor="end" class="node-role">vault</text>
         </g>
 
         <circle r="3" class="particle"><animateMotion dur="4.2s" repeatCount="indefinite"><mpath href="#e1"/></animateMotion></circle>
@@ -944,7 +947,7 @@ footer .built .py{color:var(--data)}
         <circle r="2.4" class="particle" style="opacity:.6"><animateMotion dur="6s" repeatCount="indefinite"><mpath href="#e5"/></animateMotion></circle>
         <circle r="2.4" class="particle" style="opacity:.6"><animateMotion dur="6.5s" begin="1.5s" repeatCount="indefinite"><mpath href="#e6"/></animateMotion></circle>
       </svg>
-      <div class="viz-status" id="viz-status">iter 12 / grounded 0.90</div>
+      <div class="viz-status" id="viz-status">plan · 4 steps validated</div>
     </div>
   </div>
 </section>
@@ -1032,59 +1035,60 @@ footer .built .py{color:var(--data)}
   <header class="section-head">
     <span class="kicker">§ 02 &nbsp;/&nbsp; work</span>
     <h2>Three <em>shipped.</em></h2>
-    <span class="kicker">production-ready</span>
+    <span class="kicker">code on github</span>
   </header>
 
   <div class="work-grid">
     <article class="proj reveal" data-cursor="repo" data-track>
-      <div class="proj-head"><span class="idx">P/01</span><span class="role">multi-agent</span></div>
-      <h3>Research <em>Assistant</em></h3>
+      <div class="proj-head"><span class="idx">P/01</span><span class="role">agentic</span></div>
+      <h3>Synapse: <em>AI Assistant</em></h3>
       <p class="proj-desc">
-        Give it a research question. <b>Four agents</b> — planner, researcher, writer, critic — coordinate through a shared <span class="hi">ChromaDB</span> memory to produce a grounded report with citations. The critic loops until the writer's claims are backed by sources. Hit <span class="hi">0.90 groundedness</span> on a 20-query RAGAS eval, roughly 2× the single-prompt baseline.
+        Give it a goal and it plans, executes and checks its own work. A checkpointed <b>LangGraph</b> state machine routes each step to one of 8 specialist agents or 5 CrewAI crews, through <span class="hi">38 MCP tools</span>: Obsidian, Gmail, Calendar, Notion, n8n. Anything that sends, deletes or overwrites <span class="hi">waits for your approval.</span>
       </p>
       <div class="proj-metrics">
-        <div><div class="n">0.90</div><div class="l">grounded</div></div>
-        <div><div class="n">20</div><div class="l">eval set</div></div>
-        <div><div class="n">4</div><div class="l">agents</div></div>
+        <div><div class="n">38</div><div class="l">mcp tools</div></div>
+        <div><div class="n">16</div><div class="l">behaviour evals</div></div>
+        <div><div class="n">76</div><div class="l">tests in ci</div></div>
       </div>
       <div class="proj-chips">
-        <span>LangGraph</span><span>ChromaDB</span><span>RAGAS</span><span>Streamlit</span>
+        <span>LangGraph</span><span>CrewAI</span><span>MCP</span><span>FastAPI</span>
       </div>
-      <a class="proj-link" href="https://github.com/Siddhu-6" target="_blank" rel="noopener">repo <span class="arr">↗</span></a>
+      <a class="proj-link" href="https://github.com/Siddhu-6/Synapse" target="_blank" rel="noopener">repo <span class="arr">↗</span></a>
     </article>
 
     <article class="proj reveal" data-d="1" data-cursor="repo" data-track>
-      <div class="proj-head"><span class="idx">P/02</span><span class="role">automation</span></div>
-      <h3>Workflow <em>Platform</em></h3>
+      <div class="proj-head"><span class="idx">P/02</span><span class="role">rag</span></div>
+      <h3>notes<em>-gpt</em></h3>
       <p class="proj-desc">
-        Automates inbound triage for a small team. Emails and form submissions land → a <b>LangChain classifier</b> tags intent and urgency → <span class="hi">n8n</span> routes structured responses to Gmail, Sheets, or Slack. <span class="hi">~70% less manual triage.</span> Retry-safe webhooks with idempotency and schema-violation alerts.
+        Chat with your own PDFs. <b>BM25 and semantic search</b> run side by side, a <span class="hi">cross-encoder</span> reranks what they find, and every claim cites <span class="hi">[file p.N]</span>, or the answer is "I don't know". No RAG framework: parsing, chunking, retrieval and reranking are written by hand. Uploads live in memory for your session only.
       </p>
       <div class="proj-metrics">
-        <div><div class="n">70<span class="u">%</span></div><div class="l">triage cut</div></div>
-        <div><div class="n">3</div><div class="l">outputs</div></div>
-        <div><div class="n">24/7</div><div class="l">uptime</div></div>
+        <div><div class="n">2</div><div class="l">retrievers</div></div>
+        <div><div class="n">5</div><div class="l">kept after rerank</div></div>
+        <div><div class="n">0</div><div class="l">uploads stored</div></div>
       </div>
       <div class="proj-chips">
-        <span>n8n</span><span>LangChain</span><span>Docker</span><span>Webhooks</span>
+        <span>ChromaDB</span><span>BM25</span><span>Groq</span><span>Streamlit</span>
       </div>
-      <a class="proj-link" href="https://github.com/Siddhu-6" target="_blank" rel="noopener">repo <span class="arr">↗</span></a>
+      <a class="proj-link" href="https://notes-gpt.streamlit.app/" target="_blank" rel="noopener">live demo <span class="arr">↗</span></a>
+      <a class="proj-link" href="https://github.com/Siddhu-6/notes-gpt" target="_blank" rel="noopener">repo <span class="arr">↗</span></a>
     </article>
 
     <article class="proj reveal" data-d="2" data-cursor="repo" data-track>
-      <div class="proj-head"><span class="idx">P/03</span><span class="role">mlops</span></div>
-      <h3>Prediction <em>Service</em></h3>
+      <div class="proj-head"><span class="idx">P/03</span><span class="role">edge ai</span></div>
+      <h3>Sleep AI <em>on a chip</em></h3>
       <p class="proj-desc">
-        End-to-end churn prediction. EDA → <b>SMOTE-balanced XGBoost</b> → <span class="hi">FastAPI</span> microservice in Docker. Improved <span class="hi">F1 from 0.72 to 0.85</span> on 7K+ rows through feature engineering and hyperparameter search. Serves live predictions in under 100 ms.
+        Predicts a bad night of sleep (high WASO) from 7 days of wearable and questionnaire data. Benchmarked 7 models on a simulated 82-person cohort replicating Lee et al. (2025); an <b>LSTM + XGBoost</b> ensemble led at <span class="hi">AUROC 0.870</span>. Then shrank a 1D-CNN to a <span class="hi">7 KB INT8 model</span> that runs on an Arduino Nano 33 BLE.
       </p>
       <div class="proj-metrics">
-        <div><div class="n">0.85</div><div class="l">F1 (↑0.13)</div></div>
-        <div><div class="n">&lt;100<span class="u">ms</span></div><div class="l">latency</div></div>
-        <div><div class="n">7K</div><div class="l">rows</div></div>
+        <div><div class="n">0.870</div><div class="l">auroc</div></div>
+        <div><div class="n">7<span class="u">KB</span></div><div class="l">on-chip model</div></div>
+        <div><div class="n">~8<span class="u">ms</span></div><div class="l">per prediction</div></div>
       </div>
       <div class="proj-chips">
-        <span>XGBoost</span><span>FastAPI</span><span>Docker</span><span>SMOTE</span>
+        <span>TF Lite Micro</span><span>XGBoost</span><span>C++</span><span>SHAP</span>
       </div>
-      <a class="proj-link" href="https://github.com/Siddhu-6" target="_blank" rel="noopener">repo <span class="arr">↗</span></a>
+      <a class="proj-link" href="https://github.com/Siddhu-6/WASO_Sleep_Quality_Pred" target="_blank" rel="noopener">repo <span class="arr">↗</span></a>
     </article>
   </div>
 </section>
@@ -1394,9 +1398,9 @@ footer .built .py{color:var(--data)}
 
   /* ─── agent viz status ticker ─── */
   const statusLines = [
-    'iter 12 / grounded 0.90','planner → researcher · tool_call',
-    'researcher → memory · vec_write','writer → critic · draft_v3',
-    'critic → planner · re-ground','iter 13 / citations 4/4','writer → out · report.md',
+    'plan · 4 steps validated','step 1 · web_search · ok',
+    'step 2 · create_note · ok','gmail_send · waiting for approval',
+    'verify · note read back · ok','memory · 1 fact stored','respond · answer streamed',
   ];
   const vs = $('#viz-status');
   if (vs && !reduce) {
