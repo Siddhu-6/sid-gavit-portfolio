@@ -149,6 +149,7 @@ Smaller institute, focused CS-heavy curriculum, low student-teacher ratio. Real 
 - Mountains > beaches, always. Would rather sit near a stream for an hour alone than a beach for a day.
 - Star and space gazing at night, alone, is his single favourite unstructured activity.
 - Solitude isn't loneliness for him. He needs it the way most people need social time.
+- One of his dream is to be far away from light pollution.
 
 ### 🎵 Music
 
