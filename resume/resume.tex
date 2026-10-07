@@ -1,0 +1,130 @@
+%-------------------------------------------------------------
+% Siddhikesh Arvind Gavit - AI Engineer resume (one page)
+% ATS notes: single column, standard section names, real text
+% (no icons, images, columns or text boxes), unicode-mapped glyphs
+% so copy/paste and ATS parsers read clean text.
+%-------------------------------------------------------------
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[a4paper,top=0.4in,bottom=0.35in,left=0.5in,right=0.5in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\usepackage[protrusion=true,expansion=false]{microtype}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks,pdfusetitle]{hyperref}
+
+\input{glyphtounicode}
+\pdfgentounicode=1
+
+\hypersetup{
+  pdftitle={Siddhikesh Gavit - AI Engineer Resume},
+  pdfauthor={Siddhikesh Arvind Gavit},
+  pdfsubject={Resume},
+  pdfkeywords={AI Engineer, PyTorch, Generative AI, Agentic AI, LLM, RAG, LangGraph, LangChain, CrewAI, MCP, Fine-Tuning, LoRA, QLoRA, Python, Docker, Microsoft Azure, CI/CD}
+}
+
+\definecolor{accent}{HTML}{1F3A5F}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\tabcolsep}{0pt}
+\raggedright
+
+% Section headings: bold uppercase with a thin rule
+\titleformat{\section}{\bfseries\color{accent}}{}{0pt}{\MakeUppercase}[{\color{accent}\titlerule[0.6pt]}]
+\titlespacing*{\section}{0pt}{7pt}{3.5pt}
+
+% Bullets
+\setlist[itemize]{leftmargin=1.05em,label={\textbullet},itemsep=1.5pt,parsep=0pt,topsep=2pt,partopsep=0pt}
+
+% Entry: title + date on line 1, subtitle + place on line 2
+\newcommand{\entry}[4]{%
+  \textbf{#1}\hfill\textbf{#2}\\
+  \textit{#3}\hfill\textit{#4}\par}
+% Project: name | stack ........ links
+\newcommand{\project}[3]{%
+  \textbf{#1} $|$ \textit{#2}\hfill #3\par}
+\newcommand{\link}[2]{\href{#1}{\color{accent}\underline{#2}}}
+
+\begin{document}
+
+%---------------------------------- HEADER
+\begin{center}
+  {\fontsize{19}{21}\selectfont\bfseries Siddhikesh Arvind Gavit}\\[3pt]
+  AI Engineer \,|\, Generative AI \,|\, Agentic AI \,|\, LLM Applications \,|\, Gandhinagar, India\\[2pt]
+  {\small +91 93592 79778 \,|\,
+  \link{mailto:sid.gavit6@gmail.com}{sid.gavit6@gmail.com} \,|\,
+  \link{https://www.linkedin.com/in/sid-gavit6}{linkedin.com/in/sid-gavit6} \,|\,
+  \link{https://github.com/Siddhu-6}{github.com/Siddhu-6} \,|\,
+  \link{https://sid-gavit-portfolio.vercel.app/}{sid-gavit-portfolio.vercel.app}}
+\end{center}
+\vspace{-9pt}
+
+%---------------------------------- SUMMARY
+\section{Summary}
+AI engineer building agentic AI systems, LLM applications and retrieval-augmented generation (RAG) pipelines in Python.
+Shipped a LangGraph + MCP multi-agent assistant with human-in-the-loop approvals, a hybrid-search RAG app on Microsoft
+Azure, and a quantized model on a microcontroller. Focused on production-ready AI: evaluation, guardrails and CI/CD.
+
+%---------------------------------- EDUCATION
+\section{Education}
+\entry{Indian Institute of Information Technology (IIIT) Vadodara}{Aug 2023 -- May 2027}
+      {B.Tech in Computer Science and Engineering}{Gandhinagar, Gujarat}
+{\small Coursework: Machine Learning, Deep Learning, Artificial Intelligence, Data Structures \& Algorithms, DBMS, Operating Systems, OOP}\par
+\vspace{1.5pt}
+\textbf{Hon. Sharad Pawar International School (CBSE)}: Class XII 80.00\% (2022), Class X 84.80\% (2020)\hfill\textit{Nashik, Maharashtra}\par
+
+%---------------------------------- SKILLS
+\section{Technical Skills}
+\begin{itemize}[label={},leftmargin=0pt,itemsep=1pt]
+  \item \textbf{Generative AI \& LLMs:} LLM APIs (OpenAI, Anthropic Claude, Google Gemini, Groq), Hugging Face, Ollama, Prompt Engineering, Tool/Function Calling, Structured Outputs, Fine-Tuning \& PEFT (LoRA, QLoRA, DoRA), Guardrails, NLP
+  \item \textbf{Agentic AI \& RAG:} LangGraph, LangChain, CrewAI, LlamaIndex, MCP, Multi-Agent Systems, Human-in-the-Loop, RAG, Hybrid Search, Reranking, Embeddings, Vector Databases (ChromaDB, Pinecone), LLM Evaluation (RAGAS)
+  \item \textbf{ML \& Deep Learning:} PyTorch, TensorFlow/Keras, scikit-learn, Transformers, XGBoost, LSTM, Pandas, NumPy, Model Quantization (INT8, TensorFlow Lite), Explainable AI (SHAP, LIME)
+  \item \textbf{MLOps \& Deployment:} FastAPI, REST APIs, Pydantic, Docker, Microsoft Azure (Container Apps), Google Cloud (Cloud Run), GitHub Actions (CI/CD), pytest, Streamlit, Git
+  \item \textbf{Languages, Data \& Automation:} Python, SQL, C++, Java; PostgreSQL, SQLite; n8n, Zapier, Make.com
+\end{itemize}
+
+%---------------------------------- EXPERIENCE
+\section{Experience}
+\entry{Research Intern, Edge AI \& Model Optimization}{Jun 2026 -- Aug 2026}
+      {IIIT Vadodara \,$|$\, \link{https://github.com/Siddhu-6/WASO_Sleep_Quality_Pred}{GitHub}}{Gandhinagar, Gujarat}
+\begin{itemize}
+  \item Compressed a sleep-quality prediction model for on-device use: rebuilt it as a lightweight 1D-CNN and reduced it to approximately 7 KB through INT8 quantization (TensorFlow Lite), with AUROC decreasing only from 0.813 to 0.803.
+  \item Deployed it on an Arduino Nano 33 BLE microcontroller, running each prediction on-device in about 8 ms.
+  \item Co-built the modeling pipeline on simulated wearable data, comparing LSTM, Transformer and XGBoost models with subject-wise splits to avoid data leakage; an LSTM + XGBoost ensemble scored best (AUROC 0.87).
+\end{itemize}
+
+%---------------------------------- PROJECTS
+\section{Projects}
+\project{Synapse: Personal Agentic AI Assistant}{Python, LangGraph, CrewAI, MCP, FastAPI, React, Docker}{\link{https://github.com/Siddhu-6/Synapse}{GitHub}}
+\begin{itemize}
+  \item Built a multi-agent assistant that turns natural-language goals into verified actions: LangGraph plans each task, routes steps to specialist agents and CrewAI crews, then checks the results.
+  \item Connected 38 tools through 7 MCP servers (Gmail, Calendar, Notion, Obsidian, n8n, web search and more); risky actions like sending email or deleting notes wait for human-in-the-loop approval.
+  \item Added guardrails against prompt injection, per-run tracing of tokens and latency, automatic fallback from Groq to a local Ollama model, and CI with 70+ tests and 16 behaviour evals.
+\end{itemize}
+\vspace{2pt}
+\project{notes-gpt: Citation-Grounded PDF RAG Assistant}{Python, ChromaDB, Groq, Docker, Azure}{\link{https://github.com/Siddhu-6/notes-gpt}{GitHub} $\cdot$ \link{https://notes-gpt.wittyflower-e8ca6384.centralindia.azurecontainerapps.io/}{Live}}
+\begin{itemize}
+  \item Built a RAG app without a framework that answers questions over uploaded PDFs, cites the source page for every claim, and says ``I don't know'' when the answer isn't in the files.
+  \item Combined keyword (BM25) and semantic search over Hugging Face embeddings in ChromaDB, then reranked results with a cross-encoder; answers stream from GPT-OSS 120B via Groq.
+  \item Containerized with Docker and set up CI/CD with GitHub Actions; deployed on Microsoft Azure Container Apps with scale-to-zero, and built a RAGAS harness to evaluate answer quality.
+\end{itemize}
+\vspace{2pt}
+\project{sid.agent: Portfolio AI Agent}{Python, FastAPI, Groq, SSE, Vercel}{\link{https://github.com/Siddhu-6/sid-gavit-portfolio}{GitHub} $\cdot$ \link{https://sid-gavit-portfolio.vercel.app/\#agent}{Live}}
+\begin{itemize}
+  \item Built and deployed a public AI agent on the portfolio site that answers recruiter questions about projects and experience, served by a FastAPI backend on Vercel with real-time streaming.
+  \item Added lightweight retrieval over a markdown knowledge base to keep prompts within token limits, plus per-IP rate limiting and input validation to control API usage.
+\end{itemize}
+
+%---------------------------------- ACHIEVEMENTS
+\section{Achievements \& Leadership}
+\begin{itemize}
+  \item \textbf{Hackathons:} Anveshan Hackathon, IIT Guwahati (national level, 48 hours), built an ML model for fake job-posting scam detection; also competed in the Adobe Hackathon and 2x HackIIITV, shipping working prototypes in 24 to 36 hours.
+  \item \textbf{Leadership:} Paid Teaching Assistant \& Football Mentor, IIIT Vadodara (Aug 2025 -- Present); Photographer, Obscura Club.
+  \item \textbf{Football:} 3x state-level player (SGFI National trials); 3rd, Inter-IIIT Sports Meet; 2nd, Concours; 2x runner-up, Ventura.
+\end{itemize}
+
+\end{document}
