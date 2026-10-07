@@ -1060,7 +1060,7 @@ footer .built .py{color:var(--data)}
       <div class="proj-head"><span class="idx">P/02</span><span class="role">rag</span></div>
       <h3>notes<em>-gpt</em></h3>
       <p class="proj-desc">
-        Chat with your own PDFs. <b>BM25 and semantic search</b> run side by side, a <span class="hi">cross-encoder</span> reranks what they find, and every claim cites <span class="hi">[file p.N]</span>, or the answer is "I don't know". No RAG framework: parsing, chunking, retrieval and reranking are written by hand. Uploads live in memory for your session only.
+        Chat with your own PDFs. <b>BM25 and semantic search</b> run side by side, a <span class="hi">cross-encoder</span> reranks what they find, and every claim cites <span class="hi">[file p.N]</span>, or the answer is "I don't know". No RAG framework: parsing, chunking, retrieval and reranking are written by hand. Uploads live in memory for your session only. Runs on <span class="hi">Azure Container Apps</span>, built by a GitHub Actions pipeline.
       </p>
       <div class="proj-metrics">
         <div><div class="n">2</div><div class="l">retrievers</div></div>
@@ -1068,9 +1068,9 @@ footer .built .py{color:var(--data)}
         <div><div class="n">0</div><div class="l">uploads stored</div></div>
       </div>
       <div class="proj-chips">
-        <span>ChromaDB</span><span>BM25</span><span>Groq</span><span>Streamlit</span>
+        <span>ChromaDB</span><span>BM25</span><span>Docker</span><span>Azure</span>
       </div>
-      <a class="proj-link" href="https://notes-gpt.streamlit.app/" target="_blank" rel="noopener">live demo <span class="arr">↗</span></a>
+      <a class="proj-link" href="https://notes-gpt.wittyflower-e8ca6384.centralindia.azurecontainerapps.io/" target="_blank" rel="noopener">live demo · azure <span class="arr">↗</span></a>
       <a class="proj-link" href="https://github.com/Siddhu-6/notes-gpt" target="_blank" rel="noopener">repo <span class="arr">↗</span></a>
     </article>
 
@@ -1078,7 +1078,7 @@ footer .built .py{color:var(--data)}
       <div class="proj-head"><span class="idx">P/03</span><span class="role">edge ai</span></div>
       <h3>Sleep AI <em>on a chip</em></h3>
       <p class="proj-desc">
-        Predicts a bad night of sleep (high WASO) from 7 days of wearable and questionnaire data. Benchmarked 7 models on a simulated 82-person cohort replicating Lee et al. (2025); an <b>LSTM + XGBoost</b> ensemble led at <span class="hi">AUROC 0.870</span>. Then shrank a 1D-CNN to a <span class="hi">7 KB INT8 model</span> that runs on an Arduino Nano 33 BLE.
+        Predicts a bad night of sleep (high WASO) from 7 days of wearable and questionnaire data. With my team, benchmarked 7 models on a simulated 82-person cohort replicating Lee et al. (2025); an <b>LSTM + XGBoost</b> ensemble led at <span class="hi">AUROC 0.870</span>. Then shrank a 1D-CNN to a <span class="hi">7 KB INT8 model</span> that runs on an Arduino Nano 33 BLE.
       </p>
       <div class="proj-metrics">
         <div><div class="n">0.870</div><div class="l">auroc</div></div>
@@ -1086,7 +1086,7 @@ footer .built .py{color:var(--data)}
         <div><div class="n">~8<span class="u">ms</span></div><div class="l">per prediction</div></div>
       </div>
       <div class="proj-chips">
-        <span>TF Lite Micro</span><span>XGBoost</span><span>C++</span><span>SHAP</span>
+        <span>TF Lite Micro</span><span>XGBoost</span><span>Arduino</span><span>SHAP</span>
       </div>
       <a class="proj-link" href="https://github.com/Siddhu-6/WASO_Sleep_Quality_Pred" target="_blank" rel="noopener">repo <span class="arr">↗</span></a>
     </article>
