@@ -242,13 +242,14 @@ Give it a goal and it plans, executes through real tools, checks its own work, a
 **Why it matters:** most agents either do too little or do things you never approved. Synapse plans first, asks before anything irreversible, and proves its writes landed.
 
 ### 2. notes-gpt — chat with your own PDFs, with citations
-**Stack:** Python, PyMuPDF, ChromaDB, sentence-transformers, rank-bm25, Groq (GPT-OSS 120B), Streamlit, RAGAS
-**Live:** notes-gpt.streamlit.app · **Repo:** github.com/Siddhu-6/notes-gpt
+**Stack:** Python, PyMuPDF, ChromaDB, sentence-transformers, rank-bm25, Groq (GPT-OSS 120B), Streamlit, Docker, GitHub Actions, Microsoft Azure, RAGAS
+**Live (Azure):** https://notes-gpt.wittyflower-e8ca6384.centralindia.azurecontainerapps.io/ · **Also on:** notes-gpt.streamlit.app · **Repo:** github.com/Siddhu-6/notes-gpt
 
 - The whole RAG pipeline written without a framework: page-level PDF parsing, 800-character overlapping chunks tagged with file and page, embeddings in ChromaDB.
 - **Hybrid retrieval:** BM25 and semantic search (bge-small-en-v1.5) run side by side, a bge-reranker-base cross-encoder reranks the results, and the best 5 chunks go to the model.
 - Every claim cites `[file p.N]`. If the answer isn't in the files, it says "I don't know".
 - Uploads live in an in-memory store for that browser session only. Nothing is saved or shared.
+- **Deployment:** containerized with Docker (CPU-only image, models baked in). A GitHub Actions workflow builds the image and pushes it to GitHub Container Registry, and it runs on Microsoft Azure Container Apps with scale-to-zero, 2 GB of memory and sticky sessions. He deployed it himself on an Azure for Students subscription. The first visit after it has been idle takes about a minute to start.
 - **Evaluation:** a RAGAS harness with 20 hand-written question/answer pairs and a separate judge model. The published scores (0.95 faithfulness, 0.98 context precision) are from a LlamaIndex dense-retrieval baseline; evaluating the app's own hybrid pipeline is the next step.
 
 **Why it exists:** he wanted to understand RAG end to end, not just wire up a framework.
